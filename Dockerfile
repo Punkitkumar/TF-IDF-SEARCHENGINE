@@ -1,4 +1,4 @@
-# Multi-stage build for a smaller image size
+# Optimized Dockerfile for Render deployment
 FROM python:3.12-slim
 
 WORKDIR /app
@@ -12,16 +12,19 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source code and modules
+# Pre-download the sentence-transformers model during build
+# so it doesn't download at runtime (avoids timeout + saves memory)
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+
+# Copy source code and data
 COPY backend/ backend/
-COPY scrapers/ scrapers/
-COPY scripts/ scripts/
-COPY data/ data/
+COPY data/processed/ data/processed/
 
 ENV PYTHONPATH=/app
 
-# Expose the API port
-EXPOSE 8000
+# Render sets PORT env variable; default to 8000 for local dev
+ENV PORT=8000
+EXPOSE ${PORT}
 
-# Start FastAPI
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start FastAPI - use $PORT so Render can control the port
+CMD uvicorn backend.main:app --host 0.0.0.0 --port $PORT

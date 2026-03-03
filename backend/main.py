@@ -10,7 +10,7 @@ import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-app = FastAPI(title="LeetCode Search Engine")
+app = FastAPI(title=" AlgoSearch – AI-Powered Coding Problem Discovery Engine")
 
 app.add_middleware(
     CORSMiddleware,

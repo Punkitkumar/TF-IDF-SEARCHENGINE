@@ -119,6 +119,9 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
+# Raw scraped data (not needed for deployment, only processed/ is required)
+data/raw/
+
 # Environments
 .env
 .venv

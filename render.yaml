@@ -1,0 +1,12 @@
+# Render Blueprint - Infrastructure as Code
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: algosearch
+    runtime: docker
+    plan: free
+    region: singapore
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12"
