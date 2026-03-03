@@ -13,6 +13,8 @@ qData_folder = "Leetcode-Scraping/qData"
 if not os.path.exists(qData_folder):
     qData_folder = "Leetcode scraping/qData"
 
+cfData_folder = "cfData"
+
 target_str = "Example 1:"
 
 def preprocess(text):
@@ -22,24 +24,49 @@ def preprocess(text):
 documents = []
 qlinks = []
 
-# Load Qlinks
-with open(os.path.join(qData_folder, "Qlink.txt"), "r", encoding="utf-8", errors="ignore") as f:
-    qlinks = [line.strip() for line in f.readlines()]
+print("Loading raw LeetCode documents...")
+# Load Leetcode Qlinks
+if os.path.exists(os.path.join(qData_folder, "Qlink.txt")):
+    with open(os.path.join(qData_folder, "Qlink.txt"), "r", encoding="utf-8", errors="ignore") as f:
+        qlinks.extend([line.strip() for line in f.readlines()])
 
-print("Loading raw documents...")
-for i in range(1, 2040):
-    file_path = os.path.join(qData_folder, f"{i}/{i}.txt")
-    if not os.path.exists(file_path):
-        documents.append("")
-        continue
-        
-    doc = ""
-    with open(file_path, "r", encoding='utf-8', errors="ignore") as f:
-        for line in f:
-            if target_str in line:
-                break
-            doc += line
-    documents.append(doc)
+    for i in range(1, 2040):
+        file_path = os.path.join(qData_folder, f"{i}/{i}.txt")
+        if not os.path.exists(file_path):
+            if len(documents) < len(qlinks): # keep arrays aligned 
+                documents.append("")
+            continue
+            
+        doc = ""
+        with open(file_path, "r", encoding='utf-8', errors="ignore") as f:
+            for line in f:
+                if target_str in line:
+                    break
+                doc += line
+        documents.append(doc)
+
+print("Loading raw Codeforces documents...")
+# Load Codeforces Qlinks
+if os.path.exists(os.path.join(cfData_folder, "Qlink.txt")):
+    cf_links = []
+    with open(os.path.join(cfData_folder, "Qlink.txt"), "r", encoding="utf-8", errors="ignore") as f:
+        cf_links = [line.strip() for line in f.readlines()]
+    
+    qlinks.extend(cf_links)
+
+    for i in range(1, len(cf_links) + 1):
+        file_path = os.path.join(cfData_folder, f"{i}/{i}.txt")
+        if not os.path.exists(file_path):
+            documents.append("")
+            continue
+            
+        doc = ""
+        with open(file_path, "r", encoding='utf-8', errors="ignore") as f:
+            # Codeforces formatting logic (it already has names embedded)
+            doc = f.read()
+        documents.append(doc)
+
+print(f"Total Combined Documents: {len(documents)}")
 
 # 1. BM25 Indexing
 print("Tokenizing documents for BM25...")

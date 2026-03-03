@@ -1,0 +1,1 @@
+Build XOR on a Segment

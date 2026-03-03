@@ -111,15 +111,25 @@ async def search(query_obj: SearchQuery):
         score = hybrid_scores[idx]
         if score > 0.05: # Only return highly relevant results
             link = qlinks[idx] if idx < len(qlinks) else ""
+            
+            # Format title from URL slug based on the platform
             if "leetcode.com" in link:
                 try: 
                     title_slug = link.rstrip("/").split("/")[-1]
                     title_parts = title_slug.replace("-", " ")
-                    title = title_parts.title()
+                    title = f"LeetCode: {title_parts.title()}"
                 except:
                     title = "LeetCode Problem"
+            elif "codeforces.com" in link:
+                try:
+                    parts = link.rstrip("/").split("/")
+                    contest_id = parts[-2]
+                    prob_index = parts[-1]
+                    title = f"Codeforces: Contest {contest_id} - Problem {prob_index}"
+                except:
+                    title = "Codeforces Problem"
             else:
-                title = "Question Source"
+                title = "Competitive Programming Question"
                 
             results.append({
                 "title": title,

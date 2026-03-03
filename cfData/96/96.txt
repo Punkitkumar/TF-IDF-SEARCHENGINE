@@ -1,0 +1,1 @@
+XOR-convenience (Hard Version)
