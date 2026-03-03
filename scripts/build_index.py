@@ -6,14 +6,12 @@ import faiss
 from rank_bm25 import BM25Okapi
 from sentence_transformers import SentenceTransformer
 
-DATA_DIR = "data"
+# We are currently in scripts/, so data is located at ../data
+DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "processed")
 os.makedirs(DATA_DIR, exist_ok=True)
 
-qData_folder = "Leetcode-Scraping/qData"
-if not os.path.exists(qData_folder):
-    qData_folder = "Leetcode scraping/qData"
-
-cfData_folder = "cfData"
+qData_folder = os.path.join(os.path.dirname(__file__), "..", "data", "raw", "leetcode")
+cfData_folder = os.path.join(os.path.dirname(__file__), "..", "data", "raw", "codeforces")
 
 target_str = "Example 1:"
 

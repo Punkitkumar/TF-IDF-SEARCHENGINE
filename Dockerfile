@@ -12,15 +12,16 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source code and data
-COPY main.py .
-COPY prepare.py .
-COPY templates/ templates/
+# Copy source code and modules
+COPY backend/ backend/
+COPY scrapers/ scrapers/
+COPY scripts/ scripts/
 COPY data/ data/
-COPY Leetcode-Scraping/ Leetcode-Scraping/
+
+ENV PYTHONPATH=/app
 
 # Expose the API port
 EXPOSE 8000
 
 # Start FastAPI
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]

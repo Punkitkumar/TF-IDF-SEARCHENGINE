@@ -19,9 +19,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-templates = Jinja2Templates(directory="templates")
+# Path adjustment because we are running from the backend/ directory or root
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "backend", "templates"))
 
-DATA_DIR = "data"
+DATA_DIR = os.path.join(BASE_DIR, "data", "processed")
 
 # Global states
 bm25 = None

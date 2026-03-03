@@ -6,4 +6,5 @@ jinja2
 python-multipart
 sentence-transformers
 faiss-cpu
-beautifulsoup4\nrequests
+beautifulsoup4
+requests
